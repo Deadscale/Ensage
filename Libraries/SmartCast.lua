@@ -88,7 +88,7 @@ Reason?
         |         - CastRange is how far you can cast the spell from your hero (Put 0 if there it's a no target ability)|
         |         - Blink (true/false) - Includes Blink Dagger the Cast.                                                |
         -----------------------------------------------------------------------------------------------------------------      
-        | SmartCast.FindAOE(Ability, Minimum, SpellRange, CastRange, Blink)                                                      |
+        | SmartCast.FindAOE(Minimum, SpellRange, CastRange, Blink)                                                      |
         |      Description: Returns the central position between entities if they're within range, else nil.            |
         |         - Minimum is the minimum number of enemies you would like to hit                                      |
         |         - SpellRange is the range of your spell                                                               |
@@ -259,8 +259,8 @@ function SmartCast.CastAOE(Ability, Minimum, SpellRange, CastRange, Blink)
     end
     table.sort(SmartCast.Distance)
     if (SmartCast.Distance[Minimum] < SpellRange) and (math.sqrt(math.pow(SmartCast.Location[k].x-me.position.x,2)+math.pow(SmartCast.Location[k].y-me.position.y,2)) < CastRange) then
-      if CastRange < 0 then
-        entityList:GetMyPlayer():UseAbility(Ability, SmartCast.Location)
+      if CastRange > 0 then
+        entityList:GetMyPlayer():UseAbility(Ability, SmartCast.Location[k])
         SmartCast.Location = {}
         SmartCast.Distance = {}
         SmartCast.Center = {1,1,1,1,1,1,1,1,1,1}
@@ -274,7 +274,7 @@ function SmartCast.CastAOE(Ability, Minimum, SpellRange, CastRange, Blink)
       end
     end
     if (SmartCast.Distance[Minimum] < SpellRange) and Blink == true and Dagger and (math.sqrt(math.pow(SmartCast.Location[k].x-me.position.x,2)+math.pow(SmartCast.Location[k].y-me.position.y,2)) < (1200 + CastRange)) then
-      if CastRange < 0 then
+      if CastRange > 0 then
         entityList:GetMyPlayer():UseAbility(Dagger, SmartCast.Location[k])
         entityList:GetMyPlayer():UseAbility(Ability, SmartCast.Location[k], true)
         SmartCast.Location = {}
